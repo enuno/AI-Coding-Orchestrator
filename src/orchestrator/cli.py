@@ -10,6 +10,7 @@ import click
 from orchestrator import __version__
 from orchestrator.classifier.agent_assigner import AgentAssigner, AgentAssignment
 from orchestrator.classifier.task_classifier import TaskClassifier
+from orchestrator.comparison.engine import ComparisonEngine
 from orchestrator.config.generator import ConfigurationGenerator, ProjectContext
 from orchestrator.execution.coordinator import ExecutionCoordinator
 from orchestrator.execution.prompts import PromptGenerator
@@ -238,11 +239,13 @@ def orchestrate(
 @click.option("--max-concurrent", "-c", default=5, help="Maximum concurrent executions")
 @click.option("--timeout", "-t", default=3600, help="Timeout per task in seconds")
 @click.option("--repo-path", "-r", type=click.Path(exists=True), default=".", help="Repository path")
+@click.option("--compare", is_flag=True, help="Compare implementations and recommend best")
 def execute(
     plan_file: str,
     max_concurrent: int,
     timeout: int,
     repo_path: str,
+    compare: bool,
 ) -> None:
     """Execute tasks by creating worktrees and running agents in parallel.
 
@@ -334,6 +337,47 @@ def execute(
         click.echo(f"   {status_icon} {execution.assignment.task.id}: {execution.status.value}")
         if execution.duration:
             click.echo(f"      Duration: {execution.duration:.2f}s")
+
+    # Step 6: Compare implementations if requested
+    if compare and len(executions) > 1:
+        click.echo("\n6. Comparing implementations...")
+
+        # Group executions by task
+        task_executions = {}
+        for execution in executions:
+            task_id = execution.assignment.task.id
+            if task_id not in task_executions:
+                task_executions[task_id] = []
+            task_executions[task_id].append(execution)
+
+        # Compare each task with multiple implementations
+        engine = ComparisonEngine()
+        for task_id, task_execs in task_executions.items():
+            if len(task_execs) > 1:
+                click.echo(f"\n   Comparing {len(task_execs)} implementations of {task_id}:")
+
+                try:
+                    report = engine.compare_implementations(task_execs)
+
+                    # Display quality scores
+                    click.echo("\n   Quality Scores:")
+                    for agent, score in sorted(
+                        report.quality_scores.items(), key=lambda x: x[1], reverse=True
+                    ):
+                        click.echo(f"     {agent}: {score:.2f}/100")
+
+                    # Display recommendation
+                    click.echo(f"\n   Recommendation: {report.recommendation}")
+                    click.echo(f"   Confidence: {report.confidence:.0%}")
+
+                    # Display brief analysis
+                    if report.analysis:
+                        click.echo(f"\n   Analysis:")
+                        for line in report.analysis.split("\n")[:3]:  # First 3 lines
+                            click.echo(f"     {line}")
+
+                except Exception as e:
+                    click.echo(f"   ✗ Comparison failed: {e}")
 
     # Cleanup suggestion
     click.echo("\n💡 Don't forget to clean up worktrees when done:")
