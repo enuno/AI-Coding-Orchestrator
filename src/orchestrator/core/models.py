@@ -51,6 +51,8 @@ class Task:
     technical_implementation: Optional[str] = None
     task_type: TaskType = TaskType.UNKNOWN
     complexity: Complexity = Complexity.MEDIUM
+    tech_stack: List[str] = field(default_factory=list)
+    assigned_agent: Optional[str] = None
     dependencies: List[str] = field(default_factory=list)
     estimated_effort_days: float = 1.0
 
@@ -70,6 +72,8 @@ class Task:
             "technical_implementation": self.technical_implementation,
             "task_type": self.task_type.value,
             "complexity": self.complexity.value,
+            "tech_stack": self.tech_stack,
+            "assigned_agent": self.assigned_agent,
             "dependencies": self.dependencies,
             "estimated_effort_days": self.estimated_effort_days,
         }
