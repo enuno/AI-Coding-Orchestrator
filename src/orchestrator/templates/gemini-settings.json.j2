@@ -1,0 +1,28 @@
+{
+  "projectName": "{{ project.name }}",
+  "description": "{{ project.description }}",
+  "primaryLanguage": "{{ project.primary_language }}",
+  "techStack": [
+    {% for tech in project.tech_stack %}"{{ tech }}"{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ],
+  "guidelines": {
+    "devops": true,
+    "infrastructure": true,
+    "cli": true,
+    "focus": [
+      "Infrastructure as Code",
+      "CI/CD pipelines",
+      "Deployment automation",
+      "Terminal workflows"
+    ]
+  },
+  "codingStandards": [
+    {% for standard in project.coding_standards %}"{{ standard }}"{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ],
+  "buildCommands": {
+    {% for command_name, command in project.build_commands.items() %}"{{ command_name }}": "{{ command }}"{% if not loop.last %},{% endif %}
+    {% endfor %}
+  }
+}
