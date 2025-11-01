@@ -1,0 +1,387 @@
+# Agent Capability Matrix
+# Defines capabilities, strengths, weaknesses, and optimal use cases for each AI coding assistant
+
+agents:
+  claude:
+    name: "Claude Code"
+    provider: "Anthropic"
+    context_window: 200000  # tokens
+    cost_tier: "premium"
+
+    strengths:
+      - architectural_planning
+      - large_context_analysis
+      - complex_refactoring
+      - legacy_code_understanding
+      - multi_file_reasoning
+      - documentation_generation
+      - constitutional_ai_safety
+      - factual_consistency
+
+    weaknesses:
+      - autocomplete_speed
+      - real_time_suggestions
+      - limited_third_party_integrations
+      - overly_conservative_responses
+      - no_image_generation
+
+    optimal_tasks:
+      - backend_architecture
+      - legacy_refactoring
+      - api_design
+      - mcp_architecture
+      - compliance_documentation
+      - security_review
+      - design_pattern_modernization
+      - end_to_end_features
+
+    supported_languages:
+      - python
+      - javascript
+      - typescript
+      - java
+      - go
+      - rust
+      - cpp
+      - csharp
+
+    integration_type: "autonomous_agent"  # vs ide_extension
+    mcp_support: true
+
+  copilot:
+    name: "GitHub Copilot"
+    provider: "GitHub/Microsoft"
+    context_window: 8000
+    cost_tier: "mid"
+
+    strengths:
+      - autocomplete_speed
+      - real_time_suggestions
+      - boilerplate_generation
+      - ide_integration
+      - rapid_prototyping
+      - test_generation
+      - minimal_learning_curve
+
+    weaknesses:
+      - limited_context_awareness
+      - single_file_focus
+      - occasional_hallucinations
+      - security_concerns
+      - syntactic_errors
+      - edge_case_handling
+
+    optimal_tasks:
+      - boilerplate_code
+      - crud_operations
+      - test_scaffolding
+      - routine_refactoring
+      - api_client_code
+      - data_models
+      - utility_functions
+
+    supported_languages:
+      - python
+      - javascript
+      - typescript
+      - java
+      - go
+      - ruby
+      - php
+      - cpp
+      - csharp
+      - swift
+      - kotlin
+
+    integration_type: "ide_extension"
+    mcp_support: false
+
+  cursor:
+    name: "Cursor"
+    provider: "Anysphere"
+    context_window: 100000  # with Composer mode
+    cost_tier: "mid"
+
+    strengths:
+      - multi_file_editing
+      - repo_wide_refactoring
+      - agent_mode
+      - composer_mode
+      - preview_before_apply
+      - flexible_model_selection
+      - privacy_mode
+      - vs_code_compatibility
+
+    weaknesses:
+      - inconsistent_ai_quality
+      - occasional_code_breaking
+      - cluttered_interface
+      - performance_on_large_projects
+      - steep_learning_curve_advanced
+
+    optimal_tasks:
+      - multi_file_refactoring
+      - component_architecture
+      - cross_component_changes
+      - greenfield_development
+      - state_management
+      - integration_testing
+      - design_system_implementation
+
+    supported_languages:
+      - python
+      - javascript
+      - typescript
+      - java
+      - go
+      - rust
+      - cpp
+      - csharp
+      - swift
+      - kotlin
+
+    integration_type: "ide_fork"  # VS Code fork
+    mcp_support: true
+
+  gemini:
+    name: "Gemini Code Assist"
+    provider: "Google"
+    context_window: 32000
+    cost_tier: "budget"  # free for individuals
+
+    strengths:
+      - cost_effectiveness
+      - cli_workflows
+      - devops_automation
+      - google_cloud_integration
+      - code_citations
+      - agent_mode
+      - high_monthly_limits
+
+    weaknesses:
+      - recurring_login_issues
+      - code_quality_inconsistency
+      - repetitive_loops
+      - less_polished_ux
+      - test_focused_solutions
+
+    optimal_tasks:
+      - devops_scripts
+      - infrastructure_as_code
+      - terraform_configs
+      - kubernetes_manifests
+      - ci_cd_pipelines
+      - terminal_workflows
+      - google_cloud_deployments
+
+    supported_languages:
+      - python
+      - javascript
+      - typescript
+      - java
+      - go
+      - terraform
+      - yaml
+      - bash
+
+    integration_type: "cli_tool"
+    mcp_support: false
+
+  cline:
+    name: "Cline (formerly Claude Dev)"
+    provider: "Community/Open Source"
+    context_window: 200000  # when using Claude models
+    cost_tier: "variable"  # depends on API usage
+
+    strengths:
+      - open_source
+      - multi_model_support
+      - transparent_plan_act_modes
+      - mcp_marketplace_integration
+      - cost_visibility
+      - api_key_control
+      - template_library
+
+    weaknesses:
+      - vs_code_only
+      - manual_api_setup
+      - smaller_community
+      - expanding_language_coverage
+      - requires_api_management
+
+    optimal_tasks:
+      - mcp_development
+      - multi_step_workflows
+      - budget_controlled_development
+      - api_integration
+      - automation_tasks
+      - custom_tool_integration
+
+    supported_languages:
+      - python
+      - javascript
+      - typescript
+      - java
+      - go
+      - rust
+
+    integration_type: "vs_code_extension"
+    mcp_support: true
+
+  windsurf:
+    name: "Windsurf"
+    provider: "Codeium"
+    context_window: 50000
+    cost_tier: "premium"
+
+    strengths:
+      - privacy_first
+      - on_premises_deployment
+      - no_code_storage
+      - no_training_data_use
+      - live_preview
+      - one_click_deployment
+      - low_latency
+      - 70_plus_languages
+
+    weaknesses:
+      - potential_momentum_loss
+      - challenging_setup
+      - less_mature_ecosystem
+      - smaller_community
+
+    optimal_tasks:
+      - regulated_environments
+      - privacy_sensitive_projects
+      - full_stack_apps
+      - rapid_prototyping
+      - enterprise_deployment
+      - secure_development
+
+    supported_languages:
+      - python
+      - javascript
+      - typescript
+      - java
+      - go
+      - rust
+      - cpp
+      - csharp
+      # ... 70+ total languages
+
+    integration_type: "standalone_editor"
+    mcp_support: false
+
+# Agent Assignment Rules
+# Defines which agents should be assigned to which types of tasks
+
+assignment_rules:
+  backend_api:
+    primary: claude
+    secondary: [cursor]
+    supporting: [copilot]
+    reasoning: "Claude for architecture, Cursor for implementation, Copilot for boilerplate"
+
+  frontend_component:
+    primary: cursor
+    secondary: [copilot]
+    supporting: [claude]
+    reasoning: "Cursor for component structure, Copilot for styling, Claude for architecture"
+
+  devops_infrastructure:
+    primary: gemini
+    secondary: [claude]
+    supporting: [cline]
+    reasoning: "Gemini CLI for implementation, Claude for planning, Cline for automation"
+
+  legacy_refactoring:
+    primary: claude
+    secondary: [cursor]
+    supporting: [cline]
+    reasoning: "Claude for analysis (200K context), Cursor for multi-file execution"
+
+  mcp_development:
+    primary: cline
+    secondary: [claude]
+    supporting: [cursor]
+    reasoning: "Cline native MCP support, Claude for architecture"
+
+  full_stack_feature:
+    primary: cursor
+    secondary: [claude, copilot]
+    supporting: []
+    reasoning: "Cursor maintains context across stack, Claude for architecture, Copilot for speed"
+
+  testing:
+    primary: copilot
+    secondary: [cline]
+    supporting: [claude]
+    reasoning: "Copilot for test generation, Cline for execution, Claude for strategy"
+
+  documentation:
+    primary: claude
+    secondary: []
+    supporting: [cursor]
+    reasoning: "Claude excels at long-form documentation"
+
+  ui_ux_design:
+    primary: claude
+    secondary: [cursor]
+    supporting: [gemini]
+    reasoning: "Claude for design thinking, Cursor for implementation, Gemini for frameworks"
+
+  mobile_development:
+    primary: copilot
+    secondary: [claude, cursor]
+    supporting: []
+    reasoning: "Copilot for components, Claude for native modules, Cursor for cross-platform"
+
+  security_review:
+    primary: claude
+    secondary: []
+    supporting: [windsurf]
+    reasoning: "Claude for comprehensive analysis, Windsurf for privacy-sensitive code"
+
+# Complexity Scoring Factors
+# Used to estimate task complexity and adjust agent assignments
+
+complexity_factors:
+  low:  # Score 1-3
+    - crud_operations
+    - boilerplate_generation
+    - simple_utilities
+    - basic_styling
+    - documentation_updates
+
+  medium:  # Score 4-6
+    - api_endpoints
+    - component_development
+    - database_schemas
+    - integration_tests
+    - ci_cd_configuration
+
+  high:  # Score 7-10
+    - architectural_design
+    - legacy_refactoring
+    - performance_optimization
+    - security_implementation
+    - distributed_systems
+    - real_time_features
+
+# Cost Tiers (approximate monthly costs for professional use)
+cost_tiers:
+  budget:
+    monthly_cost: 0-20
+    examples: [gemini]
+
+  mid:
+    monthly_cost: 20-50
+    examples: [copilot, cursor]
+
+  premium:
+    monthly_cost: 50-100
+    examples: [claude, windsurf]
+
+  variable:
+    monthly_cost: "depends on API usage"
+    examples: [cline]

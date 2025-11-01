@@ -1,0 +1,548 @@
+# Task Classification Taxonomy
+# Defines task types, keywords, complexity factors, and classification rules
+
+task_types:
+  backend_api:
+    description: "Backend API endpoint development and business logic"
+    keywords:
+      - api
+      - endpoint
+      - rest
+      - restful
+      - graphql
+      - route
+      - controller
+      - service
+      - business logic
+      - backend
+      - server
+      - handler
+
+    complexity_factors:
+      - database_integration
+      - authentication_required
+      - authorization_logic
+      - external_api_calls
+      - transaction_management
+      - error_handling
+      - validation_rules
+      - caching_strategy
+
+    typical_deliverables:
+      - API endpoints
+      - Request/response models
+      - Business logic services
+      - Database queries
+      - API documentation
+      - Integration tests
+
+  frontend_component:
+    description: "Frontend UI component development"
+    keywords:
+      - component
+      - ui
+      - interface
+      - react
+      - vue
+      - angular
+      - svelte
+      - jsx
+      - tsx
+      - frontend
+      - client
+      - view
+      - template
+
+    complexity_factors:
+      - state_management
+      - props_complexity
+      - lifecycle_methods
+      - event_handling
+      - responsive_design
+      - accessibility_requirements
+      - animation_effects
+      - form_validation
+
+    typical_deliverables:
+      - React/Vue/Angular components
+      - CSS/styled-components
+      - State management code
+      - Event handlers
+      - Unit tests
+      - Storybook stories
+
+  devops_infrastructure:
+    description: "DevOps, infrastructure, and deployment automation"
+    keywords:
+      - devops
+      - infrastructure
+      - deployment
+      - ci/cd
+      - pipeline
+      - docker
+      - kubernetes
+      - terraform
+      - ansible
+      - helm
+      - containerization
+      - orchestration
+      - monitoring
+      - logging
+
+    complexity_factors:
+      - multi_environment_support
+      - secret_management
+      - rollback_strategy
+      - scaling_requirements
+      - monitoring_integration
+      - security_hardening
+      - disaster_recovery
+      - compliance_requirements
+
+    typical_deliverables:
+      - Terraform/CloudFormation templates
+      - Kubernetes manifests
+      - CI/CD pipeline configs
+      - Docker files
+      - Monitoring dashboards
+      - Deployment scripts
+
+  testing:
+    description: "Test development and quality assurance"
+    keywords:
+      - test
+      - testing
+      - spec
+      - unit test
+      - integration test
+      - e2e
+      - end-to-end
+      - qa
+      - quality assurance
+      - coverage
+      - assertion
+      - mock
+      - stub
+      - fixture
+
+    complexity_factors:
+      - test_data_setup
+      - mocking_requirements
+      - integration_complexity
+      - async_testing
+      - performance_testing
+      - snapshot_testing
+      - edge_case_coverage
+
+    typical_deliverables:
+      - Unit tests
+      - Integration tests
+      - E2E tests
+      - Test fixtures
+      - Mock objects
+      - Test documentation
+
+  database_schema:
+    description: "Database design and schema management"
+    keywords:
+      - database
+      - schema
+      - migration
+      - model
+      - orm
+      - sql
+      - nosql
+      - table
+      - collection
+      - index
+      - relation
+      - constraint
+
+    complexity_factors:
+      - relationship_complexity
+      - migration_strategy
+      - data_volume
+      - indexing_requirements
+      - normalization_level
+      - performance_optimization
+      - backward_compatibility
+
+    typical_deliverables:
+      - Database migrations
+      - ORM models
+      - Schema definitions
+      - Indexes
+      - Constraints
+      - Seed data
+
+  documentation:
+    description: "Technical documentation and guides"
+    keywords:
+      - documentation
+      - docs
+      - readme
+      - guide
+      - tutorial
+      - api docs
+      - specification
+      - architecture
+      - design doc
+      - runbook
+
+    complexity_factors:
+      - technical_depth
+      - diagram_requirements
+      - code_examples
+      - multi_audience
+      - versioning_needs
+      - internationalization
+
+    typical_deliverables:
+      - README files
+      - API documentation
+      - Architecture diagrams
+      - User guides
+      - Code comments
+      - Runbooks
+
+  legacy_refactoring:
+    description: "Legacy code refactoring and modernization"
+    keywords:
+      - refactor
+      - refactoring
+      - legacy
+      - modernization
+      - migration
+      - rewrite
+      - cleanup
+      - technical debt
+      - design pattern
+      - optimization
+
+    complexity_factors:
+      - codebase_size
+      - test_coverage
+      - breaking_changes
+      - dependency_updates
+      - architecture_changes
+      - backward_compatibility
+      - incremental_approach
+
+    typical_deliverables:
+      - Refactored code
+      - Updated tests
+      - Migration guide
+      - Deprecation notices
+      - Performance improvements
+      - Reduced technical debt
+
+  mcp_development:
+    description: "Model Context Protocol server/client development"
+    keywords:
+      - mcp
+      - model context protocol
+      - mcp server
+      - mcp client
+      - tool
+      - resource
+      - prompt
+      - agent integration
+
+    complexity_factors:
+      - protocol_compliance
+      - tool_complexity
+      - resource_management
+      - authentication
+      - error_handling
+      - streaming_support
+
+    typical_deliverables:
+      - MCP server implementation
+      - Tool definitions
+      - Resource handlers
+      - Authentication logic
+      - Integration tests
+      - Documentation
+
+  authentication_authorization:
+    description: "Authentication and authorization systems"
+    keywords:
+      - authentication
+      - authorization
+      - auth
+      - login
+      - signup
+      - oauth
+      - jwt
+      - session
+      - permission
+      - role
+      - access control
+      - security
+
+    complexity_factors:
+      - multi_factor_auth
+      - oauth_integration
+      - role_based_access
+      - session_management
+      - token_handling
+      - security_requirements
+
+    typical_deliverables:
+      - Auth endpoints
+      - JWT handling
+      - Permission system
+      - Session management
+      - Security middleware
+      - Auth tests
+
+  ui_ux_design:
+    description: "UI/UX design and prototyping"
+    keywords:
+      - design system
+      - ui design
+      - ux design
+      - prototype
+      - wireframe
+      - mockup
+      - style guide
+      - accessibility
+      - responsive
+      - wcag
+      - a11y
+
+    complexity_factors:
+      - design_system_complexity
+      - accessibility_requirements
+      - responsive_breakpoints
+      - animation_complexity
+      - design_token_management
+      - cross_browser_support
+
+    typical_deliverables:
+      - Design system
+      - Component library
+      - Style guide
+      - Accessibility audit
+      - Responsive layouts
+      - Design tokens
+
+  performance_optimization:
+    description: "Performance optimization and profiling"
+    keywords:
+      - performance
+      - optimization
+      - profiling
+      - benchmark
+      - caching
+      - lazy loading
+      - code splitting
+      - bundling
+      - compression
+      - cdn
+
+    complexity_factors:
+      - bottleneck_identification
+      - optimization_strategy
+      - caching_layers
+      - async_optimization
+      - bundle_size_reduction
+      - database_optimization
+
+    typical_deliverables:
+      - Performance improvements
+      - Caching implementation
+      - Lazy loading
+      - Bundle optimization
+      - Database query optimization
+      - Performance tests
+
+  security_implementation:
+    description: "Security implementation and hardening"
+    keywords:
+      - security
+      - vulnerability
+      - encryption
+      - sanitization
+      - validation
+      - csrf
+      - xss
+      - sql injection
+      - owasp
+      - security audit
+
+    complexity_factors:
+      - threat_modeling
+      - encryption_requirements
+      - compliance_standards
+      - penetration_testing
+      - security_scanning
+      - incident_response
+
+    typical_deliverables:
+      - Security middleware
+      - Input validation
+      - Encryption implementation
+      - Security tests
+      - Vulnerability fixes
+      - Security documentation
+
+  full_stack_feature:
+    description: "End-to-end feature spanning frontend and backend"
+    keywords:
+      - full stack
+      - end-to-end
+      - feature
+      - full feature
+      - complete feature
+      - frontend and backend
+
+    complexity_factors:
+      - frontend_complexity
+      - backend_complexity
+      - api_integration
+      - state_synchronization
+      - error_handling
+      - testing_strategy
+
+    typical_deliverables:
+      - Backend API
+      - Frontend components
+      - Database changes
+      - Integration tests
+      - Documentation
+      - E2E tests
+
+  mobile_development:
+    description: "Mobile app development (native or cross-platform)"
+    keywords:
+      - mobile
+      - react native
+      - flutter
+      - ios
+      - android
+      - native
+      - cross-platform
+      - app
+
+    complexity_factors:
+      - platform_differences
+      - native_module_integration
+      - performance_requirements
+      - offline_support
+      - push_notifications
+      - app_store_compliance
+
+    typical_deliverables:
+      - Mobile UI components
+      - Platform-specific code
+      - Native modules
+      - Mobile tests
+      - App configuration
+      - Release builds
+
+  data_processing:
+    description: "Data processing, ETL, and analytics"
+    keywords:
+      - data processing
+      - etl
+      - pipeline
+      - analytics
+      - data transformation
+      - batch processing
+      - stream processing
+      - aggregation
+
+    complexity_factors:
+      - data_volume
+      - transformation_complexity
+      - pipeline_orchestration
+      - error_recovery
+      - monitoring
+      - scalability
+
+    typical_deliverables:
+      - ETL pipelines
+      - Data transformations
+      - Analytics queries
+      - Processing jobs
+      - Monitoring dashboards
+      - Data quality checks
+
+# Complexity Estimation Rules
+complexity_estimation:
+  simple:  # Score 1-3
+    indicators:
+      - single_file_change
+      - clear_requirements
+      - no_dependencies
+      - existing_patterns
+      - minimal_testing
+
+  medium:  # Score 4-6
+    indicators:
+      - multi_file_changes
+      - moderate_dependencies
+      - some_ambiguity
+      - requires_design
+      - comprehensive_testing
+
+  complex:  # Score 7-10
+    indicators:
+      - architectural_changes
+      - many_dependencies
+      - unclear_requirements
+      - novel_solutions
+      - extensive_testing
+      - security_critical
+      - performance_critical
+
+# Technology Stack Detection
+tech_stack_keywords:
+  python:
+    keywords: [python, django, flask, fastapi, pytest, pandas]
+
+  javascript:
+    keywords: [javascript, js, node, npm, express]
+
+  typescript:
+    keywords: [typescript, ts, tsx]
+
+  react:
+    keywords: [react, jsx, redux, next.js, create-react-app]
+
+  vue:
+    keywords: [vue, vuex, nuxt]
+
+  angular:
+    keywords: [angular, ng, rxjs]
+
+  go:
+    keywords: [go, golang, gin, echo]
+
+  rust:
+    keywords: [rust, cargo, actix]
+
+  java:
+    keywords: [java, spring, maven, gradle]
+
+  csharp:
+    keywords: [c#, csharp, .net, asp.net]
+
+  docker:
+    keywords: [docker, dockerfile, container, containerization]
+
+  kubernetes:
+    keywords: [kubernetes, k8s, helm, kubectl]
+
+  terraform:
+    keywords: [terraform, iac, infrastructure as code]
+
+  aws:
+    keywords: [aws, amazon web services, ec2, s3, lambda]
+
+  gcp:
+    keywords: [gcp, google cloud, gke, cloud run]
+
+  azure:
+    keywords: [azure, microsoft cloud]

@@ -1,0 +1,281 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/yourusername/ai-coding-orchestrator/schemas/plan_schema.json",
+  "title": "Development Plan Schema",
+  "description": "JSON Schema for validating DEVELOPMENT_PLAN.md structure and content",
+  "type": "object",
+  "required": ["title", "phases"],
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "The title of the development plan",
+      "minLength": 5,
+      "maxLength": 200
+    },
+    "executive_summary": {
+      "type": "string",
+      "description": "Optional executive summary of the plan"
+    },
+    "core_principles": {
+      "type": "array",
+      "description": "Core development principles for the project",
+      "items": {
+        "type": "object",
+        "required": ["principle", "description"],
+        "properties": {
+          "principle": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "phases": {
+      "type": "array",
+      "description": "Development phases in the plan",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/phase"
+      }
+    },
+    "quality_metrics": {
+      "type": "object",
+      "description": "Project-level quality metrics and success criteria",
+      "properties": {
+        "test_coverage_minimum": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "performance_requirements": {
+          "type": "object"
+        }
+      }
+    },
+    "risks": {
+      "type": "array",
+      "description": "High-level project risks",
+      "items": {
+        "$ref": "#/definitions/risk"
+      }
+    }
+  },
+  "definitions": {
+    "phase": {
+      "type": "object",
+      "description": "A development phase containing stages",
+      "required": ["phase_number", "phase_name", "stages"],
+      "properties": {
+        "phase_number": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "phase_name": {
+          "type": "string",
+          "minLength": 3
+        },
+        "description": {
+          "type": "string"
+        },
+        "week_range": {
+          "type": "string",
+          "pattern": "^Week(s)? \\d+(-\\d+)?$",
+          "description": "Expected week range (e.g., 'Week 1-2' or 'Weeks 3-6')"
+        },
+        "stages": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/stage"
+          }
+        }
+      }
+    },
+    "stage": {
+      "type": "object",
+      "description": "A development stage containing tasks and activities",
+      "required": ["stage_number", "stage_name", "objective"],
+      "properties": {
+        "stage_number": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+$",
+          "description": "Stage number (e.g., '1.1', '2.3')"
+        },
+        "stage_name": {
+          "type": "string",
+          "minLength": 3
+        },
+        "week_range": {
+          "type": "string",
+          "pattern": "^Week(s)? \\d+(-\\d+)?$"
+        },
+        "objective": {
+          "type": "string",
+          "minLength": 10,
+          "description": "Clear objective for this stage"
+        },
+        "key_activities": {
+          "type": "array",
+          "description": "Key activities to be performed",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["activity", "description"],
+            "properties": {
+              "activity": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "tasks": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "deliverables": {
+          "type": "array",
+          "description": "Expected deliverables for this stage",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "validation_criteria": {
+          "type": "array",
+          "description": "Criteria to validate stage completion",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "technical_implementation": {
+          "type": "object",
+          "description": "Technical implementation details",
+          "properties": {
+            "code_examples": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "language": {
+                    "type": "string"
+                  },
+                  "code": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "architecture_notes": {
+              "type": "string"
+            }
+          }
+        },
+        "dependencies": {
+          "type": "array",
+          "description": "Dependencies on other stages or external factors",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["stage", "external", "technical"]
+              },
+              "reference": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "estimated_effort": {
+          "type": "object",
+          "description": "Estimated effort for this stage",
+          "properties": {
+            "duration_days": {
+              "type": "number",
+              "minimum": 0.5
+            },
+            "complexity": {
+              "type": "string",
+              "enum": ["simple", "medium", "complex"]
+            }
+          }
+        },
+        "task_type": {
+          "type": "string",
+          "description": "Primary task type for this stage",
+          "enum": [
+            "backend_api",
+            "frontend_component",
+            "devops_infrastructure",
+            "testing",
+            "database_schema",
+            "documentation",
+            "legacy_refactoring",
+            "mcp_development",
+            "authentication_authorization",
+            "ui_ux_design",
+            "performance_optimization",
+            "security_implementation",
+            "full_stack_feature",
+            "mobile_development",
+            "data_processing"
+          ]
+        },
+        "assigned_agents": {
+          "type": "object",
+          "description": "Manually assigned agents (overrides auto-assignment)",
+          "properties": {
+            "primary": {
+              "type": "string",
+              "enum": ["claude", "copilot", "cursor", "gemini", "cline", "windsurf"]
+            },
+            "secondary": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["claude", "copilot", "cursor", "gemini", "cline", "windsurf"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "risk": {
+      "type": "object",
+      "description": "A project risk",
+      "required": ["risk_name", "description", "priority"],
+      "properties": {
+        "risk_name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["high", "medium", "low"]
+        },
+        "mitigation": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "monitoring": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
