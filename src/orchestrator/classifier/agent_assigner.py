@@ -1,11 +1,39 @@
 """Agent assignment engine for task distribution."""
 
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 import yaml
 
 from orchestrator.core.models import Task, TaskType, Complexity
+
+
+@dataclass
+class AgentAssignment:
+    """Represents an agent assignment to a task.
+
+    Attributes:
+        task: The task being assigned
+        primary_agent: The primary agent assigned to the task
+        secondary_agents: Optional secondary/backup agents
+        phase: The phase of work (e.g., planning, implementation, review)
+        justification: Explanation of why this agent was chosen
+        confidence: Confidence score (0-1) in the assignment
+        task_type: The classified task type
+        complexity: The task complexity level
+        tech_stack: Technologies involved in the task
+    """
+
+    task: Task
+    primary_agent: str
+    secondary_agents: List[str]
+    phase: str
+    justification: str
+    confidence: float
+    task_type: str
+    complexity: str
+    tech_stack: List[str]
 
 
 class AgentAssigner:

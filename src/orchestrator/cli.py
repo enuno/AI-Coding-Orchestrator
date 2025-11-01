@@ -1,5 +1,6 @@
 """Command-line interface for AI Coding Orchestrator."""
 
+import asyncio
 import json
 from pathlib import Path
 from typing import List, Optional
@@ -7,10 +8,13 @@ from typing import List, Optional
 import click
 
 from orchestrator import __version__
-from orchestrator.classifier.agent_assigner import AgentAssigner
+from orchestrator.classifier.agent_assigner import AgentAssigner, AgentAssignment
 from orchestrator.classifier.task_classifier import TaskClassifier
 from orchestrator.config.generator import ConfigurationGenerator, ProjectContext
+from orchestrator.execution.coordinator import ExecutionCoordinator
+from orchestrator.execution.prompts import PromptGenerator
 from orchestrator.parser.plan_parser import PlanParser
+from orchestrator.worktree.manager import WorktreeManager
 
 
 @click.group()
@@ -227,6 +231,170 @@ def orchestrate(
     click.echo(f"\nGenerated files in {output_dir}:")
     for filename in generated_files.keys():
         click.echo(f"  - {filename}")
+
+
+@cli.command()
+@click.argument("plan_file", type=click.Path(exists=True))
+@click.option("--max-concurrent", "-c", default=5, help="Maximum concurrent executions")
+@click.option("--timeout", "-t", default=3600, help="Timeout per task in seconds")
+@click.option("--repo-path", "-r", type=click.Path(exists=True), default=".", help="Repository path")
+def execute(
+    plan_file: str,
+    max_concurrent: int,
+    timeout: int,
+    repo_path: str,
+) -> None:
+    """Execute tasks by creating worktrees and running agents in parallel.
+
+    Example:
+        orchestrator execute DEVELOPMENT_PLAN.md --max-concurrent 3
+    """
+    click.echo("Starting task execution workflow...\n")
+
+    # Step 1: Parse and prepare tasks
+    click.echo("1. Parsing and preparing tasks...")
+    parser = PlanParser()
+    plan = parser.parse_file(plan_file)
+    tasks = plan.get_all_tasks()
+
+    # Classify and assign
+    classifier = TaskClassifier()
+    classified_tasks = classifier.classify_tasks(tasks)
+
+    assigner = AgentAssigner()
+    assigned_tasks = assigner.assign_agents(classified_tasks)
+
+    click.echo(f"   ✓ Prepared {len(assigned_tasks)} tasks for execution")
+
+    # Step 2: Create worktrees
+    click.echo("\n2. Creating worktrees...")
+    manager = WorktreeManager(repo_path=Path(repo_path))
+
+    worktrees = {}
+    assignments = []
+
+    for task in assigned_tasks:
+        if not task.assigned_agent:
+            continue
+
+        worktree = manager.create_worktree(
+            agent=task.assigned_agent,
+            task_id=task.id,
+        )
+        worktrees[task.id] = worktree
+
+        # Create AgentAssignment for execution
+        assignment = AgentAssignment(
+            task=task,
+            primary_agent=task.assigned_agent,
+            secondary_agents=[],
+            phase="implementation",
+            justification=f"Assigned to {task.assigned_agent} based on task type and complexity",
+            confidence=0.9,
+            task_type=task.task_type.value,
+            complexity=task.complexity.value,
+            tech_stack=task.tech_stack,
+        )
+        assignments.append(assignment)
+
+    click.echo(f"   ✓ Created {len(worktrees)} worktrees")
+
+    # Step 3: Generate prompts
+    click.echo("\n3. Generating agent prompts...")
+    prompt_gen = PromptGenerator()
+    worktree_paths = {task_id: wt.path for task_id, wt in worktrees.items()}
+    prompts = prompt_gen.generate_batch_prompts(assignments, worktree_paths)
+
+    click.echo(f"   ✓ Generated {len(prompts)} prompts")
+
+    # Step 4: Execute in parallel
+    click.echo(f"\n4. Executing tasks (max {max_concurrent} concurrent)...")
+
+    async def run_execution():
+        coordinator = ExecutionCoordinator(max_concurrent=max_concurrent)
+        executions = await coordinator.execute_parallel(assignments, worktrees)
+        return coordinator, executions
+
+    coordinator, executions = asyncio.run(run_execution())
+
+    # Step 5: Display results
+    click.echo("\n5. Execution results:")
+    summary = coordinator.get_summary()
+
+    click.echo(f"\n   Total: {summary['total']}")
+    click.echo(f"   ✓ Completed: {summary['completed']}")
+    click.echo(f"   ✗ Failed: {summary['failed']}")
+    click.echo(f"   ⏱ Timeout: {summary['timeout']}")
+    click.echo(f"   ⏸ Cancelled: {summary['cancelled']}")
+
+    # Show individual results
+    click.echo("\n   Task details:")
+    for execution in executions:
+        status_icon = "✓" if execution.is_successful else "✗"
+        click.echo(f"   {status_icon} {execution.assignment.task.id}: {execution.status.value}")
+        if execution.duration:
+            click.echo(f"      Duration: {execution.duration:.2f}s")
+
+    # Cleanup suggestion
+    click.echo("\n💡 Don't forget to clean up worktrees when done:")
+    click.echo("   orchestrator cleanup")
+
+
+@cli.command()
+@click.option("--repo-path", "-r", type=click.Path(exists=True), default=".", help="Repository path")
+def cleanup(repo_path: str) -> None:
+    """Clean up all managed worktrees.
+
+    Example:
+        orchestrator cleanup
+    """
+    click.echo("Cleaning up worktrees...")
+
+    manager = WorktreeManager(repo_path=Path(repo_path))
+    worktrees = manager.list_worktrees()
+
+    if not worktrees:
+        click.echo("   No worktrees to clean up")
+        return
+
+    click.echo(f"   Found {len(worktrees)} worktrees")
+
+    for worktree in worktrees:
+        try:
+            manager.delete_worktree(worktree.path)
+            click.echo(f"   ✓ Removed {worktree.path}")
+        except Exception as e:
+            click.echo(f"   ✗ Failed to remove {worktree.path}: {e}")
+
+    click.echo("\n✓ Cleanup complete")
+
+
+@cli.command()
+@click.option("--repo-path", "-r", type=click.Path(exists=True), default=".", help="Repository path")
+def status(repo_path: str) -> None:
+    """Show status of all managed worktrees.
+
+    Example:
+        orchestrator status
+    """
+    click.echo("Worktree status:\n")
+
+    manager = WorktreeManager(repo_path=Path(repo_path))
+    worktrees = manager.list_worktrees()
+
+    if not worktrees:
+        click.echo("   No active worktrees")
+        return
+
+    click.echo(f"   Total worktrees: {len(worktrees)}\n")
+
+    for worktree in worktrees:
+        click.echo(f"   {worktree.path}")
+        click.echo(f"   ├─ Agent: {worktree.agent}")
+        click.echo(f"   ├─ Task: {worktree.task_id}")
+        click.echo(f"   ├─ Branch: {worktree.branch}")
+        click.echo(f"   ├─ Status: {worktree.status}")
+        click.echo(f"   └─ Port: {worktree.port}\n")
 
 
 if __name__ == "__main__":
